@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() ~ "" ~ "Profil de " ~ "" ~ user.username }}{% endblock %}
+
+{% block body %}
+
+
+<div class="card text-center">
+  <div class="card-header">
+    <h4><strong>{{ user.username ~ " (" ~ user.roles | last ~ ")"~}}</strong></h4>
+  </div>
+  <div class="card-body">
+    <p class="card-text">Inscrit depuis le {{ user.createdAt | date("m/d/Y à H:i:s", "Europe/Paris") }}</p>
+    <h5 class="card-title">Lorem ipsum dolor sit amet.</h5>
+    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem, voluptas.</p>
+    </div>
+    {% if user.id == app.user.id %}
+        <div class="card-footer text-muted">
+            Lorem, ipsum dolor.
+        </div>
+    {% endif %}
+</div>
+
+
+
+
+{% endblock %}

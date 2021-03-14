@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter{% endblock %}
+
+{% block body %}
+
+<div>
+{# <a href='{{ path("homepage") }}'>{{ "Accueil" }}</a> > <a href='{{ path("listTopic", {"id":topic.categorie.id}) }}'>{{ topic.categorie.name }}</a> > <a href='{{ path("listMessage", {"id":topic.id}) }}'>{{ topic.name }}</a> #}
+</div>
+{{ form(formMessage) }}
+
+{% endblock %}

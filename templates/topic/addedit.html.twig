@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter{% endblock %}
+
+{% block body %}
+
+<div>
+{# <a href='{{ path("homepage") }}'>{{ "Accueil" }}</a> > <a href='{{ path("listTopic", {"id":topic.categorie.id}) }}'>{{ topic.categorie.name }}</a> > <a href='{{ path("listMessage", {"id":topic.id}) }}'>{{ topic.name }}</a> #}
+</div>
+{# {{ form(formTopic) }} #}
+
+
+{{ form_start(formTopic) }}
+
+    <div>
+        <div>
+            {{ form_row(formTopic.name) }}
+        </div>
+        <div>
+        <label for="name">Message</label>
+            <input type="text" class="tiny" name="text" id="text" required>
+        </div>
+        </div>
+        <div>
+            {{ form_row(formTopic.Valider) }}
+        </div>
+    </div>
+{{ form_end(formTopic) }}
+
+
+{% endblock %}

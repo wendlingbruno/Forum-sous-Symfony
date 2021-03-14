@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() ~ "" ~ topic.name }}{% endblock %}
+
+{% block body %}
+
+<a href='{{ path("homepage") }}'>{{ "Accueil" }}</a> > <a href='{{ path("listTopic", {"id":topic.id}) }}'>{{ topic.name }}</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nom Topic</th>
+            <th>Auteur</th>
+            <th>Nombre de messages</th>
+            <th>Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+{% for listTopic in topic.topics  %}
+<tr>
+<td><a class="nav-link" href='{{ path("listMessage", {"id":listTopic.id}) }}'>
+
+{% if listTopic.locked == 1 %}
+    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z"/>
+    <path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
+    </svg>
+{% endif %}
+{{ listTopic.name }}</a></td>
+<td><a href='{{ path("profil", {"id":listTopic.user.id}) }}'>{{ listTopic.user.username }}</a></td>
+<td><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chat-square-dots-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.5a1 1 0 0 0-.8.4l-1.9 2.533a1 1 0 0 1-1.6 0L5.3 12.4a1 1 0 0 0-.8-.4H2a2 2 0 0 1-2-2V2zm5 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+</svg> {{ listTopic.messages | length}}</td>
+<td>{{ listTopic.createdAt | date("m/d/Y à H:i:s", "Europe/Paris") }}</td>
+<td>
+
+
+    {% if app.user %}
+        {% if app.user.id == listTopic.user.id or "ROLE_ADMIN" in app.user.getRoles %}
+            <a class="confirmation" href='{{ path("topic_delete", {"id":listTopic.id}) }}'><button type="button" class="btn btn-danger">Supprimer topic</button></a>
+        {% endif %}
+    {% endif %}
+</td>
+</tr>
+{% endfor %}
+    </tbody>
+</table>
+
+{% if app.user %}
+    <a href='{{ path("topic_add", {"id":topic.id}) }}'><button type="button" class="btn btn-dark">Ajouter Topic</button></a>
+{% endif %}
+
+
+{% endblock %}

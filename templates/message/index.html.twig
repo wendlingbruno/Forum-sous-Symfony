@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() ~ "" ~ topic.name }}{% endblock %}
+
+{% block body %}
+
+<div>
+<a href='{{ path("homepage") }}'>{{ "Accueil" }}</a> > <a href='{{ path("listTopic", {"id":topic.categorie.id}) }}'>{{ topic.categorie.name }}</a> > <a href='{{ path("listMessage", {"id":topic.id}) }}'>
+{% if topic.locked == 1 %}
+    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z"/>
+        <path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
+    </svg>
+{% endif %}
+{{ topic.name }}</a>
+</div>
+{% if topic.locked == 0 %}
+    {% set msglock = "Fermer le topic" %}
+{% else %}
+    {% set msglock = "Réouvrir le topic" %}
+    <strong>{{ "Ce topic est fermé, il n'est plus possible de répondre." }} </strong><br>
+{% endif %}
+
+{% if app.user.id == topic.user.id %}
+    <a href='{{ path("topic_lock", {"id":topic.id}) }}'><button type="button" class="btn btn-dark">{{ msglock }}</button></a> 
+{% endif %}
+
+{% set nb = 0 %}
+{% for messages in topic.messages %}
+    
+    <hr>
+    <div class="card border-primary mx-auto" style="max-width: 80rem;">
+    <div class="card-header">
+        <a href='{{ path("profil", {"id":messages.user.id}) }}'>{{ messages.user.username }}</a>{{", le " ~ messages.createdAt | date("m/d/Y à H:i:s", "Europe/Paris") }}
+        {% if app.user %}
+            {% if app.user.id == messages.user.id or "ROLE_ADMIN" in app.user.getRoles %}
+                <a href='{{ path("message_edit", {"id":topic.id, "id2":messages.id}) }}'><button type="button" class="btn btn-dark">Editer message</button></a>
+                {% if nb == 0 %}
+                    <a class="confirmation" href='{{ path("topic_delete", {"id":topic.id}) }}'><button type="button" class="btn btn-danger">Supprimer topic</button></a>
+                {% else %}
+                <a class="confirmation" href='{{ path("message_delete", {"id":messages.id}) }}'><button type="button" class="btn btn-danger">Supprimer message</button></a> 
+                {% endif %}
+            {% endif %}
+        {% endif %}
+        {% set nb = 1 %}
+    </div>
+    <div class="card-body">
+        <p class="card-text">{{ messages.message | raw }}</p>
+    </div>
+    </div>
+
+
+
+{% endfor %}
+{% if app.user %}
+    {% if topic.locked == 0 %}
+        <a href='{{ path("message_add", {"id":topic.id}) }}'><button type="button" class="btn btn-dark">Ajouter Message</button></a>
+    {% endif %}
+{% endif %}
+{% endblock %}
+
+
